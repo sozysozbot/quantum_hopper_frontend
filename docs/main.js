@@ -1,13 +1,11 @@
 "use strict";
 var makeLilyPadAt = function (_a, angle) {
     var x = _a[0], y = _a[1];
-    var g = document.createElementNS('http://www.w3.org/2000/svg', "g");
-    g.setAttribute("transform", "\n\ttranslate(" + (PADDING + SPACING_CONSTANT * x) + " " + (PADDING + SPACING_CONSTANT * y) + ")\n\tscale(" + LILYPAD_RADIUS / 13 + ")\n\trotate(" + angle + ")\n\t");
     var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    path.setAttribute("transform", "\n\ttranslate(" + (PADDING + SPACING_CONSTANT * x) + " " + (PADDING + SPACING_CONSTANT * y) + ")\n\tscale(" + LILYPAD_RADIUS / 13 + ")\n\trotate(" + angle + ")\n\t");
     path.setAttribute('fill', '#66c810');
     path.setAttribute("d", "m -13 0 a 13 13 0 0 0 25 5 a 5 5 0 0 1 0 -10 a 13 13 0 0 0 -25 5");
-    g.appendChild(path);
-    return g;
+    return path;
 };
 var makeGuidingLine = function (_a, _b) {
     var x1 = _a[0], y1 = _a[1];
@@ -62,12 +60,42 @@ var drawFrogs = function (cs) {
     var g = document.createElementNS('http://www.w3.org/2000/svg', "g");
     for (var _i = 0, cs_1 = cs; _i < cs_1.length; _i++) {
         var c = cs_1[_i];
-        var path = document.createElementNS('http://www.w3.org/2000/svg', "circle");
-        path.setAttribute("cx", "" + (PADDING + SPACING_CONSTANT * c[0]));
-        path.setAttribute('fill', '#49692d');
-        path.setAttribute("cy", "" + (PADDING + SPACING_CONSTANT * c[1]));
-        path.setAttribute("r", "" + FROG_RADIUS);
-        g.appendChild(path);
+        var frog = document.createElementNS('http://www.w3.org/2000/svg', "g");
+        frog.setAttribute("transform", "\n\t\t\ttranslate(" + (PADDING + SPACING_CONSTANT * c[0]) + " " + (PADDING + SPACING_CONSTANT * c[1]) + ")\n\t\t\tscale(1, 1.5)\n\t\t\tscale(" + FROG_RADIUS / 10 + ")");
+        var frog_bg = document.createElementNS('http://www.w3.org/2000/svg', "path");
+        frog_bg.setAttribute('fill', '#49692d');
+        frog_bg.setAttribute("d", "m -10 0 C -10 7 10 7 10 0 C 10 -2 9 -3 6 -4 C 7 -7 3 -8 2 -5 C 1 -6 -1 -6 -2 -5 C -3 -8 -7 -7 -6 -4 C -9 -3 -10 -2 -10 0");
+        var frog_eye = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+        frog_eye.setAttribute("fill", "#000000");
+        frog_eye.setAttribute("cx", "4.5");
+        frog_eye.setAttribute("cy", "-4");
+        frog_eye.setAttribute("r", "1");
+        var frog_eye2 = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+        frog_eye2.setAttribute("fill", "#000000");
+        frog_eye2.setAttribute("cx", "-4.5");
+        frog_eye2.setAttribute("cy", "-4");
+        frog_eye2.setAttribute("r", "1");
+        var frog_eye3 = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+        frog_eye3.setAttribute("fill", "#FFA500");
+        frog_eye3.setAttribute("cx", "4");
+        frog_eye3.setAttribute("cy", "-4");
+        frog_eye3.setAttribute("r", "2");
+        var frog_eye4 = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+        frog_eye4.setAttribute("fill", "#FFA500");
+        frog_eye4.setAttribute("cx", "-4");
+        frog_eye4.setAttribute("cy", "-4");
+        frog_eye4.setAttribute("r", "2");
+        var frog_mouth = document.createElementNS('http://www.w3.org/2000/svg', "path");
+        frog_mouth.setAttribute('stroke', '#000000');
+        frog_mouth.setAttribute('fill', 'transparent');
+        frog_mouth.setAttribute("d", "m-7 0C-3 3 3 3 7 0");
+        frog.appendChild(frog_bg);
+        frog.appendChild(frog_eye3);
+        frog.appendChild(frog_eye4);
+        frog.appendChild(frog_eye);
+        frog.appendChild(frog_eye2);
+        frog.appendChild(frog_mouth);
+        g.appendChild(frog);
     }
     return g;
 };
