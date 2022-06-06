@@ -257,7 +257,14 @@ const state: State[] = [
 // hop({from: [0,2], to: [2,4])
 // state[2] --> either state[4] or state[5]
 
-let current_state = 1;
+let current_state: 1 | 2 | 3 | 4 | 5 = 1;
+
+const undo_fake_demo = () => {
+	if (current_state === 4) { renderState(2) }
+	else if (current_state === 5) { renderState(2) }
+	else if (current_state === 3) { renderState(2) } 
+	else if (current_state === 2) { renderState(1) }
+}
 
 const trigger_fake_demo = () => {
 	if (current_state === 1
@@ -287,7 +294,7 @@ const trigger_fake_demo = () => {
 	}
 }
 
-const renderState = (state_id?: number) => {
+const renderState = (state_id?: 1 | 2 | 3 | 4 | 5) => {
 	if (state_id === undefined) { renderState(current_state); return; }
 	const background = createBackground();
 	document.getElementById("board")!.innerHTML = ""; // clear
@@ -300,6 +307,8 @@ const renderState = (state_id?: number) => {
 	current_state = state_id;
 	document.getElementById("board")!.appendChild(frogs);
 	clicked_coords.length = 0;
+
+	(document.getElementById("undo") as HTMLButtonElement).disabled = state_id === 1;
 }
 
 const main = () => { renderState(1); }

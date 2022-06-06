@@ -230,6 +230,20 @@ var state = [
 // hop({from: [0,2], to: [2,4])
 // state[2] --> either state[4] or state[5]
 var current_state = 1;
+var undo_fake_demo = function () {
+    if (current_state === 4) {
+        renderState(2);
+    }
+    else if (current_state === 5) {
+        renderState(2);
+    }
+    else if (current_state === 3) {
+        renderState(2);
+    }
+    else if (current_state === 2) {
+        renderState(1);
+    }
+};
 var trigger_fake_demo = function () {
     if (current_state === 1
         && clicked_coords[0][0] === 4
@@ -272,5 +286,6 @@ var renderState = function (state_id) {
     current_state = state_id;
     document.getElementById("board").appendChild(frogs);
     clicked_coords.length = 0;
+    document.getElementById("undo").disabled = state_id === 1;
 };
 var main = function () { renderState(1); };

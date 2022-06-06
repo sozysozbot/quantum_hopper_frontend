@@ -8,7 +8,7 @@
 
 <body onload="main()">
 	<h1>Quantum Hopper Demo (Extremely Incomplete & Butchered)</h1>
-	<label><input type="radio" name="a" id="same_color_is_exclusive" onclick="renderState()" checked>Mutually exclusive frogs get the same color</label><br>
+	<label><input type="radio" name="a" id="same_color_is_exclusive" onclick="renderState()" checked>Mutually exclusive frogs that come from the same frog in the past get the same color</label><br>
 	<label><input type="radio" name="a" id="same_color_is_compatible" onclick="renderState()">Mutually compatible frogs get the same color</label>
 	<div id="res">
 		<svg id="board" width="120mm" height="120mm" version="1.1" viewbox="0 0 220 220"
@@ -17,6 +17,7 @@
 		</svg>
 	</div>
 	<button onclick="trigger_fake_demo()">Submit!</button>
+	<button onclick="undo_fake_demo()" disabled id="undo">Undo!</button>
 </body>
 
 </html>
