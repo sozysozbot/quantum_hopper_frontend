@@ -1,5 +1,28 @@
 type Coord = [0 | 1 | 2 | 3 | 4, 0 | 1 | 2 | 3 | 4];
 
+const clicked_coords: Coord[] = [];
+function showGuide([x, y]: Coord) {
+	if (clicked_coords.length === 0) {
+		const circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+		circle.setAttribute("cx", `${OUTER_PADDING + SPACING_CONSTANT * x}`);
+		circle.setAttribute("cy", `${OUTER_PADDING + SPACING_CONSTANT * y}`);
+		circle.setAttribute("r", `${LILYPAD_RADIUS * 0.8}`);
+		circle.setAttribute("fill-opacity", "0.5");
+		circle.setAttribute("fill", "#ff0000");
+		document.getElementById("board")!.appendChild(circle);
+		clicked_coords.push([x, y]);
+	} else {
+		const circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+		circle.setAttribute("cx", `${OUTER_PADDING + SPACING_CONSTANT * x}`);
+		circle.setAttribute("cy", `${OUTER_PADDING + SPACING_CONSTANT * y}`);
+		circle.setAttribute("r", `${LILYPAD_RADIUS * 0.8}`);
+		circle.setAttribute("fill-opacity", "0.5");
+		circle.setAttribute("fill", "#ffff00");
+		document.getElementById("board")!.appendChild(circle);
+		clicked_coords.push([x, y]);
+	}
+}
+
 const makeLilyPadAt = ([x, y]: Coord, angle: number) => {
 	const path = document.createElementNS('http://www.w3.org/2000/svg', "path");
 
@@ -10,6 +33,7 @@ const makeLilyPadAt = ([x, y]: Coord, angle: number) => {
 	`);
 	path.setAttribute('fill', '#66c810');
 	path.setAttribute("d", "m -13 0 a 13 13 0 0 0 25 5 a 5 5 0 0 1 0 -10 a 13 13 0 0 0 -25 5");
+	path.addEventListener("click", () => { showGuide([x, y]) })
 	return path
 }
 
@@ -185,13 +209,52 @@ const state5: Frog[] = [
 // state2 --> state3
 
 // hop({from: [0,2], to: [2,4])
-// state3 --> either state4 or state5
+// state2 --> either state4 or state5
 
-const main = () => {
+let current_state = 1;
+
+const trigger_fake_demo = () => {
+	if (current_state === 1
+		&& clicked_coords[0][0] === 4
+		&& clicked_coords[0][1] === 4
+		&& (clicked_coords[1][0] === 2
+			&& clicked_coords[1][1] === 2
+			&& clicked_coords[2][0] === 0
+			&& clicked_coords[2][1] === 4
+			|| clicked_coords[2][0] === 2
+			&& clicked_coords[2][1] === 2
+			&& clicked_coords[1][0] === 0
+			&& clicked_coords[1][1] === 4
+		)
+	) {
+		renderState(state2);
+		current_state = 2;
+		clicked_coords.length = 0;
+	} else if (current_state === 2) {
+		if (clicked_coords[0][0] === 0 && clicked_coords[0][1] === 2 && clicked_coords[1][0] === 4 && clicked_coords[1][1] === 2) {
+			renderState(state3);
+			current_state = 3;
+			clicked_coords.length = 0;
+		} else if (clicked_coords[0][0] === 0 && clicked_coords[0][1] === 2 && clicked_coords[1][0] === 2 && clicked_coords[1][1] === 4) {
+			if (Math.random() < 0.5) {
+				renderState(state4);
+				current_state = 4;
+				clicked_coords.length = 0;
+			} else {
+				renderState(state5);
+				current_state = 5;
+				clicked_coords.length = 0;
+			}
+		}
+	}
+}
+
+const renderState = (state: Frog[]) => {
 	const background = createBackground();
 	document.getElementById("board")!.innerHTML = ""; // clear
 	document.getElementById("board")!.appendChild(background);
-	const frogs = drawFrogs(state5);
+	const frogs = drawFrogs(state);
 	document.getElementById("board")!.appendChild(frogs);
-
 }
+
+const main = () => { renderState(state1); }
