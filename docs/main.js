@@ -120,9 +120,9 @@ var main = function () {
     document.getElementById("board").appendChild(background);
     var frogs = drawFrogs([
         { coord: [0, 2], prob: 1, color: "transparent" },
-        { coord: [0, 4], prob: 0.5, color: "#aa5242" },
+        { coord: [0, 4], prob: 0.5, color: "#5242aa" },
         { coord: [1, 3], prob: 1, color: "transparent" },
-        { coord: [2, 2], prob: 0.5, color: "#aa5242" },
+        { coord: [2, 2], prob: 0.5, color: "#5242aa" },
         { coord: [2, 4], prob: 0.5, color: "#aa5242" },
         { coord: [3, 3], prob: 0.5, color: "#aa5242" },
     ]);
