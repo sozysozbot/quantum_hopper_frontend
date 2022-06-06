@@ -114,17 +114,51 @@ var drawFrogs = function (fs) {
     }
     return frogs;
 };
+var state2 = [
+    { coord: [0, 2], prob: 1, color: "transparent" },
+    { coord: [0, 4], prob: 0.5, color: "#5242aa" },
+    { coord: [1, 3], prob: 1, color: "transparent" },
+    { coord: [2, 2], prob: 0.5, color: "#5242aa" },
+    { coord: [2, 4], prob: 0.5, color: "#aa5242" },
+    { coord: [3, 3], prob: 0.5, color: "#aa5242" },
+];
+var state3 = [
+    { coord: [0, 2], prob: 0.5, color: "#a37acc" },
+    { coord: [0, 4], prob: 0.5, color: "#5242aa" },
+    { coord: [1, 3], prob: 1, color: "transparent" },
+    { coord: [2, 2], prob: 0.5, color: "#5242aa" },
+    { coord: [2, 4], prob: 0.5, color: "#aa5242" },
+    { coord: [3, 3], prob: 0.5, color: "#aa5242" },
+    { coord: [4, 2], prob: 0.5, color: "#a37acc" },
+];
+var state1 = [
+    { coord: [0, 2], prob: 1, color: "transparent" },
+    { coord: [1, 3], prob: 1, color: "transparent" },
+    { coord: [2, 4], prob: 1, color: "transparent" },
+    { coord: [3, 3], prob: 1, color: "transparent" },
+    { coord: [4, 4], prob: 1, color: "transparent" },
+];
+var state4 = [
+    { coord: [0, 2], prob: 1, color: "transparent" },
+    { coord: [1, 3], prob: 1, color: "transparent" },
+    { coord: [2, 2], prob: 1, color: "transparent" },
+    { coord: [2, 4], prob: 1, color: "transparent" },
+];
+var state5 = [
+    { coord: [0, 4], prob: 1, color: "transparent" },
+    { coord: [2, 4], prob: 1, color: "transparent" },
+    { coord: [3, 3], prob: 1, color: "transparent" },
+];
+// split_hop({from: [4,4], to1: [2,2], to2: [0,4]}) 
+// state1 --> state2
+// hop({from: [0,2], to: [4,2]})
+// state2 --> state3
+// hop({from: [0,2], to: [2,4])
+// state3 --> either state4 or state5
 var main = function () {
     var background = createBackground();
     document.getElementById("board").innerHTML = ""; // clear
     document.getElementById("board").appendChild(background);
-    var frogs = drawFrogs([
-        { coord: [0, 2], prob: 1, color: "transparent" },
-        { coord: [0, 4], prob: 0.5, color: "#5242aa" },
-        { coord: [1, 3], prob: 1, color: "transparent" },
-        { coord: [2, 2], prob: 0.5, color: "#5242aa" },
-        { coord: [2, 4], prob: 0.5, color: "#aa5242" },
-        { coord: [3, 3], prob: 0.5, color: "#aa5242" },
-    ]);
+    var frogs = drawFrogs(state5);
     document.getElementById("board").appendChild(frogs);
 };
