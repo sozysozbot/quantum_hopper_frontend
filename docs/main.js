@@ -125,12 +125,23 @@ var drawFrogs = function (fs) {
         var f = fs_1[_i];
         var frog = document.createElementNS('http://www.w3.org/2000/svg', "g");
         frog.setAttribute("transform", "translate(" + (OUTER_PADDING + SPACING_CONSTANT * f.coord[0]) + " " + (OUTER_PADDING + SPACING_CONSTANT * f.coord[1]) + ")");
-        if (f.prob != 1) {
-            var FROG_PROB_RADIUS = 13;
+        var FROG_PROB_RADIUS = 13;
+        if (f.prob !== 1) {
             var frog_prob = document.createElementNS('http://www.w3.org/2000/svg', "path");
             frog_prob.setAttribute('fill', "transparent");
             frog_prob.setAttribute('stroke', f.color);
             frog_prob.setAttribute("d", "m " + FROG_PROB_RADIUS + " 0 A " + FROG_PROB_RADIUS + " " + FROG_PROB_RADIUS + " 0 0 0 " + (FROG_PROB_RADIUS * Math.cos(Math.PI * 2 * f.prob)).toFixed(2) + " " + (FROG_PROB_RADIUS * Math.sin(Math.PI * 2 * f.prob)).toFixed(2));
+            frog_prob.setAttribute("stroke-width", "3");
+            frog.appendChild(frog_prob);
+        }
+        else if (f.prob === 1 && f.color !== "transparent") {
+            // a full circle cannot be drawn with an arc path
+            var frog_prob = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+            frog_prob.setAttribute('fill', "transparent");
+            frog_prob.setAttribute('cx', "0");
+            frog_prob.setAttribute('cy', "0");
+            frog_prob.setAttribute('r', "" + FROG_PROB_RADIUS);
+            frog_prob.setAttribute('stroke', f.color);
             frog_prob.setAttribute("stroke-width", "3");
             frog.appendChild(frog_prob);
         }
@@ -139,47 +150,85 @@ var drawFrogs = function (fs) {
     }
     return frogs;
 };
-var state2 = [
-    { coord: [0, 2], prob: 1, color: "transparent" },
-    { coord: [0, 4], prob: 0.5, color: "#5242aa" },
-    { coord: [1, 3], prob: 1, color: "transparent" },
-    { coord: [2, 2], prob: 0.5, color: "#5242aa" },
-    { coord: [2, 4], prob: 0.5, color: "#aa5242" },
-    { coord: [3, 3], prob: 0.5, color: "#aa5242" },
-];
-var state3 = [
-    { coord: [0, 2], prob: 0.5, color: "#a37acc" },
-    { coord: [0, 4], prob: 0.5, color: "#5242aa" },
-    { coord: [1, 3], prob: 1, color: "transparent" },
-    { coord: [2, 2], prob: 0.5, color: "#5242aa" },
-    { coord: [2, 4], prob: 0.5, color: "#aa5242" },
-    { coord: [3, 3], prob: 0.5, color: "#aa5242" },
-    { coord: [4, 2], prob: 0.5, color: "#a37acc" },
-];
-var state1 = [
-    { coord: [0, 2], prob: 1, color: "transparent" },
-    { coord: [1, 3], prob: 1, color: "transparent" },
-    { coord: [2, 4], prob: 1, color: "transparent" },
-    { coord: [3, 3], prob: 1, color: "transparent" },
-    { coord: [4, 4], prob: 1, color: "transparent" },
-];
-var state4 = [
-    { coord: [0, 2], prob: 1, color: "transparent" },
-    { coord: [1, 3], prob: 1, color: "transparent" },
-    { coord: [2, 2], prob: 1, color: "transparent" },
-    { coord: [2, 4], prob: 1, color: "transparent" },
-];
-var state5 = [
-    { coord: [0, 4], prob: 1, color: "transparent" },
-    { coord: [2, 4], prob: 1, color: "transparent" },
-    { coord: [3, 3], prob: 1, color: "transparent" },
+var state = [
+    { same_color_means_compatibility: [], same_color_means_exclusivity: [] },
+    {
+        same_color_means_exclusivity: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+            { coord: [3, 3], prob: 1, color: "transparent" },
+            { coord: [4, 4], prob: 1, color: "transparent" },
+        ], same_color_means_compatibility: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+            { coord: [3, 3], prob: 1, color: "transparent" },
+            { coord: [4, 4], prob: 1, color: "transparent" },
+        ]
+    },
+    {
+        same_color_means_exclusivity: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [0, 4], prob: 0.5, color: "#5242aa" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 2], prob: 0.5, color: "#5242aa" },
+            { coord: [2, 4], prob: 0.5, color: "#aa5242" },
+            { coord: [3, 3], prob: 0.5, color: "#aa5242" },
+        ], same_color_means_compatibility: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [0, 4], prob: 0.5, color: "#335242" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 2], prob: 0.5, color: "#aa0000" },
+            { coord: [2, 4], prob: 0.5, color: "#aa0000" },
+            { coord: [3, 3], prob: 0.5, color: "#335242" },
+        ]
+    }, {
+        same_color_means_exclusivity: [
+            { coord: [0, 2], prob: 0.5, color: "#a37acc" },
+            { coord: [0, 4], prob: 0.5, color: "#5242aa" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 0.5, color: "#aa5242" },
+            { coord: [3, 3], prob: 0.5, color: "#aa5242" },
+            { coord: [4, 2], prob: 0.5, color: "#a37acc" },
+        ], same_color_means_compatibility: [
+            { coord: [0, 2], prob: 0.5, color: "#335242" },
+            { coord: [0, 4], prob: 0.5, color: "#335242" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 0.5, color: "#aa0000" },
+            { coord: [3, 3], prob: 0.5, color: "#335242" },
+            { coord: [4, 2], prob: 0.5, color: "#aa0000" },
+        ]
+    }, {
+        same_color_means_exclusivity: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 2], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+        ], same_color_means_compatibility: [
+            { coord: [0, 2], prob: 1, color: "transparent" },
+            { coord: [1, 3], prob: 1, color: "transparent" },
+            { coord: [2, 2], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+        ]
+    }, {
+        same_color_means_exclusivity: [
+            { coord: [0, 4], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+            { coord: [3, 3], prob: 1, color: "transparent" },
+        ], same_color_means_compatibility: [
+            { coord: [0, 4], prob: 1, color: "transparent" },
+            { coord: [2, 4], prob: 1, color: "transparent" },
+            { coord: [3, 3], prob: 1, color: "transparent" },
+        ]
+    }
 ];
 // split_hop({from: [4,4], to1: [2,2], to2: [0,4]}) 
-// state1 --> state2
+// state[1] --> state[2]
 // hop({from: [0,2], to: [4,2]})
-// state2 --> state3
+// state[2] --> state[3]
 // hop({from: [0,2], to: [2,4])
-// state2 --> either state4 or state5
+// state[2] --> either state[4] or state[5]
 var current_state = 1;
 var trigger_fake_demo = function () {
     if (current_state === 1
@@ -193,35 +242,35 @@ var trigger_fake_demo = function () {
                 && clicked_coords[2][1] === 2
                 && clicked_coords[1][0] === 0
                 && clicked_coords[1][1] === 4)) {
-        renderState(state2);
-        current_state = 2;
-        clicked_coords.length = 0;
+        renderState(2);
     }
     else if (current_state === 2) {
         if (clicked_coords[0][0] === 0 && clicked_coords[0][1] === 2 && clicked_coords[1][0] === 4 && clicked_coords[1][1] === 2) {
-            renderState(state3);
-            current_state = 3;
-            clicked_coords.length = 0;
+            renderState(3);
         }
         else if (clicked_coords[0][0] === 0 && clicked_coords[0][1] === 2 && clicked_coords[1][0] === 2 && clicked_coords[1][1] === 4) {
             if (Math.random() < 0.5) {
-                renderState(state4);
-                current_state = 4;
-                clicked_coords.length = 0;
+                renderState(4);
             }
             else {
-                renderState(state5);
-                current_state = 5;
-                clicked_coords.length = 0;
+                renderState(5);
             }
         }
     }
 };
-var renderState = function (state) {
+var renderState = function (state_id) {
+    if (state_id === undefined) {
+        renderState(current_state);
+        return;
+    }
     var background = createBackground();
     document.getElementById("board").innerHTML = ""; // clear
     document.getElementById("board").appendChild(background);
-    var frogs = drawFrogs(state);
+    var frogs = drawFrogs(document.getElementById("same_color_is_exclusive").checked ?
+        state[state_id].same_color_means_exclusivity :
+        state[state_id].same_color_means_compatibility);
+    current_state = state_id;
     document.getElementById("board").appendChild(frogs);
+    clicked_coords.length = 0;
 };
-var main = function () { renderState(state1); };
+var main = function () { renderState(1); };
